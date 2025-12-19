@@ -7,7 +7,6 @@ pub struct ThreadPool {
     workers: Vec<Worker>,
     sender: Option<mpsc::Sender<Job>>,
 }
-// struct Job;
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
@@ -19,8 +18,10 @@ impl ThreadPool {
 
         let receiver = Arc::new(Mutex::new(receiver));
 
+        // Creates an empty list with pre-allocated memory for `size`
         let mut workers = Vec::with_capacity(size);
 
+        // Runs `size` times to initialize individual workers
         for id in 0..size {
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
